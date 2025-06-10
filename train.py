@@ -38,7 +38,7 @@ class BaseModel(nn.Module):
     def __init__(self, num_classes):
         super(BaseModel, self).__init__()
         self.backbone = timm.create_model(
-            'swin_large_patch4_window12_384',
+            'convnextv2_base.fcmae_ft_in22k_in1k_384',
             pretrained=True,
             num_classes=num_classes
         )
@@ -168,7 +168,7 @@ for epoch in range(CFG['EPOCHS']):
 
     if val_logloss < best_val:
         best_val = val_logloss
-        torch.save(model.state_dict(), 'best_swin.pth')
+        #torch.save(model.state_dict(), 'best_swin.pth')
         trigger_times = 0
     else:
         trigger_times += 1
