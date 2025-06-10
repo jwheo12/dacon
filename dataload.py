@@ -98,6 +98,7 @@ def get_loaders(train_root='train', test_root='test'):
 
     # full dataset for stratification
     full_dataset = CustomImageDataset(train_root, transform=None)
+    print(f"총 이미지 수: {len(full_dataset)}")
     targets_all = [label for _, label in full_dataset.samples]
     class_names = full_dataset.classes
 
@@ -111,7 +112,7 @@ def get_loaders(train_root='train', test_root='test'):
 
     train_dataset = Subset(CustomImageDataset(train_root, transform=train_transform), train_idx)
     val_dataset = Subset(CustomImageDataset(train_root, transform=val_transform), val_idx)
-
+    print(f'train 이미지 수: {len(train_dataset)}, valid 이미지 수: {len(val_dataset)}')
     # Weighted sampler for class imbalance
     cls_counts = np.bincount([full_dataset.samples[i][1] for i in train_idx])
     class_weights = 1.0 / cls_counts
