@@ -30,7 +30,7 @@ class BaseModel(nn.Module):
     def __init__(self, num_classes):
         super(BaseModel, self).__init__()
         self.backbone = timm.create_model(
-            'convnextv2_base.fcmae_ft_in22k_in1k_384',
+            CFG['model'],
             pretrained=True,
             num_classes=num_classes
         )
@@ -63,7 +63,7 @@ def main():
         "batch_size": CFG['BATCH_SIZE'],
         "optimizer": "AdamW",
         "loss_function": "FocalLoss",
-        "model": "BaseModel",
+        "model": CFG['model'],
     })
     # Instantiate model and freeze backbone initial epochs
     model = BaseModel(num_classes=len(class_names)).to(device)
@@ -75,7 +75,7 @@ def main():
             param.requires_grad = False
     
     # Optimizer, scheduler, scaler
-    optimizer = optim.AdamW(model.parameters(), lr=CFG['LEARNING_RATE'], weight_decay=0.01)
+    optimizer = optim.AdamW(model.parameters(), lr=CFG['LEARNING_RATE'], weight_decay=0.05)
     best_logloss = float('inf')
     total_steps = len(train_loader) * CFG['EPOCHS']
     warmup_steps = len(train_loader) * 3
@@ -85,7 +85,7 @@ def main():
         num_training_steps=total_steps
     )
     scaler = GradScaler()
-    patience = 7
+    patience = CFG['patience']
     trigger_times = 0
     best_val = float('inf')
     
@@ -175,6 +175,7 @@ def main():
             trigger_times += 1
             if trigger_times >= patience:
                 print(f"Early stopping at epoch {epoch+1}")
+                wandb.save('best_model.pth')
                 break
     
     wandb.finish()
