@@ -14,10 +14,10 @@ from dataload import get_loaders, CFG, seed_everything
 from sklearn.metrics import log_loss
 from tqdm import tqdm
 
-# Initialize W&B
 
 
-# Seed and device
+
+# Seed 
 seed_everything(CFG['SEED'])
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Using device:", device)
@@ -89,8 +89,7 @@ def main():
     trigger_times = 0
     best_val = float('inf')
     
-    # Class weights for focal loss
-    # Compute class counts from train_loader.dataset.dataset.samples if using Subset
+    
     try:
         samples = train_loader.dataset.dataset.samples
     except:
@@ -169,7 +168,6 @@ def main():
     
         if val_logloss < best_val:
             best_val = val_logloss
-            #torch.save(model.state_dict(), 'best_swin.pth')
             trigger_times = 0
         else:
             trigger_times += 1
