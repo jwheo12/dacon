@@ -1,5 +1,6 @@
 
 import os
+import yaml
 import random
 import numpy as np
 import torch
@@ -7,15 +8,10 @@ from torch.utils.data import Dataset, DataLoader, Subset, WeightedRandomSampler
 from torchvision.transforms import v2
 from sklearn.model_selection import train_test_split
 from PIL import Image
-
+with open('config.yaml', 'r') as f:
+    CFG = yaml.safe_load(f)
 # Configuration
-CFG = {
-    'IMG_SIZE': 384,
-    'BATCH_SIZE': 32,
-    'EPOCHS': 100,
-    'LEARNING_RATE': 1e-4,
-    'SEED': 42
-}
+
 
 def seed_everything(seed):
     random.seed(seed)
