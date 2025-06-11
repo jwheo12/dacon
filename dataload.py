@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 from PIL import Image
 with open('config.yaml', 'r') as f:
     CFG = yaml.safe_load(f)
-# Configuration
+
 
 
 def seed_everything(seed):
@@ -89,10 +89,10 @@ def get_transforms():
     return train_transform, val_transform
 
 def get_loaders(train_root='train', test_root='test'):
-    # Seed before splitting
+    
     seed_everything(CFG['SEED'])
 
-    # full dataset for stratification
+    
     full_dataset = CustomImageDataset(train_root, transform=None)
     print(f"총 이미지 수: {len(full_dataset)}")
     targets_all = [label for _, label in full_dataset.samples]
@@ -109,7 +109,8 @@ def get_loaders(train_root='train', test_root='test'):
     train_dataset = Subset(CustomImageDataset(train_root, transform=train_transform), train_idx)
     val_dataset = Subset(CustomImageDataset(train_root, transform=val_transform), val_idx)
     print(f'train 이미지 수: {len(train_dataset)}, valid 이미지 수: {len(val_dataset)}')
-    # Weighted sampler for class imbalance
+   
+    # Weighted sampler
     cls_counts = np.bincount([full_dataset.samples[i][1] for i in train_idx])
     class_weights = 1.0 / cls_counts
     sample_weights = [class_weights[label] for label in [full_dataset.samples[i][1] for i in train_idx]]
@@ -135,7 +136,7 @@ def get_loaders(train_root='train', test_root='test'):
         pin_memory=True
     )
 
-    # Test loader
+    
     test_dataset = CustomImageDataset(test_root, transform=val_transform, is_test=True)
     test_loader = DataLoader(
         test_dataset,
