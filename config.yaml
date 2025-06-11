@@ -1,0 +1,7 @@
+IMG_SIZE: 384
+BATCH_SIZE: 32
+EPOCHS: 100
+LEARNING_RATE: 0.0001
+SEED: 42
+patience: 10
+model: "convnextv2_base.fcmae_ft_in22k_in1k_384"
